@@ -193,7 +193,7 @@
     <div class="container-lista-configuracoes">
       <div class="configuracoes-item">
         <div class="configuracoes-item-titulo notificacoes-titulo">
-          <img src="./assets/icons/sino-notificacao.svg">
+          <img src="./assets/icons/notification.png">
           <h3>Notificações</h3>
           <button id="setaAbaixo1">
             <img src="./assets/icons/seta_esquerda.png">
@@ -201,7 +201,7 @@
         </div>
         <ul class="configuracoes-lista-subitens lista-notificacoes">
           <li class="configuracoes-subitem">
-            <img src="./assets/icons/gota_agua2.png">
+            <img src="./assets/icons/drop.png">
             <h4>Hidratação</h4>   
             <label class="switch">
               <input type="checkbox" class="on-off-button">
@@ -209,7 +209,7 @@
             </label>
           </li>
           <li class="configuracoes-subitem">
-            <img src="./assets/icons/diu.png">
+            <img src="./assets/icons/contraceptive.png">
             <h4>Contraceptivo</h4>
             <label class="switch">
               <input type="checkbox" class="on-off-button">
@@ -217,7 +217,7 @@
             </label>
           </li>
           <li class="configuracoes-subitem">
-            <img src="./assets/icons/menstruation.png">
+            <img src="./assets/icons/calendar.png">
             <h4>Início do Ciclo</h4>
             <label class="switch">
               <input type="checkbox" class="on-off-button">
@@ -233,7 +233,7 @@
             </label>        
           </li>
           <li class="configuracoes-subitem">
-            <img src="./assets/icons/fertilization.png">
+            <img src="./assets/icons/ovum.png">
             <h4>Ovulação</h4>
             <label class="switch">
               <input type="checkbox" class="on-off-button">
@@ -243,17 +243,44 @@
         </ul>
       </div>
 
-      <div class="configuracoes-item">
-        <div class="configuracoes-item-titulo">
-          <img src="./assets/icons/pregnant.png">
+      <div class="configuracoes-item modo-gestante-item">
+        <div class="configuracoes-item-titulo gestante-titulo">
+          <img src="./assets/icons/pregnancy.png">
           <h3>Modo Gestante</h3>      
+
+          <label class="switch">
+            <input type="checkbox" id="modoGestanteToggle">
+            <span class="slider"></span>
+          </label>
         </div>
+
+        <section class="painel-gestante" id="painelGestante">
+          <h3 id="textoSemanaGestante"></h3>
+          <p id="textoMesesGestante"></p>
+
+          <div class="contadores-gestante">
+            <article>
+              <strong id="semanasCompletasGestante"></strong>
+              <span>semanas completas</span>
+            </article>
+
+            <article>
+              <strong id="diasGravidezGestante"></strong>
+              <span>dias de gravidez</span>
+            </article>
+
+            <article>
+              <strong id="tempoRestanteGestante"></strong>
+              <span>tempo restante estimado</span>
+            </article>
+          </div>
+        </section>        
         
       </div>
 
       <div class="configuracoes-item">
         <div class="configuracoes-item-titulo privacidade-titulo">
-          <img src="./assets/icons/private-account.png">
+          <img src="./assets/icons/privacy.png">
           <h3>Privacidade</h3>
           <button id="setaAbaixo2">
             <img src="./assets/icons/seta_esquerda.png">
@@ -262,7 +289,7 @@
 
         <ul class="configuracoes-lista-subitens lista-privacidade">
           <li class="configuracoes-subitem">
-            <img src="./assets/icons/olhoprivado.png">
+            <img src="./assets/icons/close-eyes.png">
             <h4>Ocultar informações sensíveis</h4>   
             <label class="switch">
               <input type="checkbox" class="on-off-button">
@@ -270,12 +297,12 @@
             </label>
           </li>
           <li class="configuracoes-subitem no-button-item">
-            <img src="./assets/icons/file-export.png">
+            <img src="./assets/icons/export.png">
             <h4>Exportar dados</h4>
 
           </li>
           <li class="configuracoes-subitem no-button-item">
-            <img src="./assets/icons/trash.png">
+            <img src="./assets/icons/trash-can.png">
             <h4>Apagar Conta</h4>
           </li>
           
@@ -284,7 +311,7 @@
 
       <div class="configuracoes-item">
         <div class="configuracoes-item-titulo seguranca-titulo">
-          <img src="./assets/icons/cadeado.png">
+          <img src="./assets/icons/security-lock.png">
           <h3>Segurança</h3>
           <button id="setaAbaixo2">
             <img src="./assets/icons/seta_esquerda.png">
@@ -293,7 +320,7 @@
         </div>
         <ul class="configuracoes-lista-subitens lista-seguranca">
           <li class="configuracoes-subitem no-button-item">
-            <img src="./assets/icons/password-change.png">
+            <img src="./assets/icons/password.png">
             <h4>Alterar Senha</h4>   
           </li>
           <li class="configuracoes-subitem no-button-item">
