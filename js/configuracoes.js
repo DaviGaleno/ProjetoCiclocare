@@ -1,7 +1,13 @@
 const dropdownBtn = document.querySelector(".dropdown-btn");
 
 const dropdownContent = document.querySelector(".dropdown-content");
-
+const modoGestanteToggle = document.getElementById("modoGestanteToggle");
+const textoSemanaGestante = document.getElementById("textoSemanaGestante");
+const textoMesesGestante = document.getElementById("textoMesesGestante");
+const semanasCompletasGestante = document.getElementById("semanasCompletasGestante");
+const diasGravidezGestante = document.getElementById("diasGravidezGestante");
+const tempoRestanteGestante = document.getElementById("tempoRestanteGestante");
+const painelGestante = document.getElementById("painelGestante");
 const tituloNotificacoes = document.querySelector(".notificacoes-titulo");
 const listaNotificacoes = document.querySelector(".lista-notificacoes");
 const tituloPrivacidade = document.querySelector(".privacidade-titulo");
@@ -43,6 +49,43 @@ dropdownBtn.addEventListener("click", () => {
   }
 
 });
+
+// MODO GESTANTE
+
+modoGestanteToggle.addEventListener("change", async() => {
+  if (!modoGestanteToggle.checked) {
+    painelGestante.classList.remove("aberto");
+    localStorage.setItem("modoGestante", "false");
+    return;
+  }
+
+  localStorage.setItem("modoGestante", "true");
+
+  const usuarioId = localStorage.getItem("usuarioId");
+  const token = localStorage.getItem("token");
+
+  const response = await fetch(
+    `http://localhost:8080/api/usuarios/${usuarioId}/modo-gestante`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+
+  const data = await response.json();
+
+  textoSemanaGestante.textContent = data.mensagemPrincipal;
+  textoMesesGestante.textContent = data.mensagemSecundaria;
+
+  semanasCompletasGestante.textContent = data.semanasCompletas;
+  diasGravidezGestante.textContent = data.diasGravidez;
+
+  tempoRestanteGestante.textContent = 
+    `${data.semanasRestantes} semanas e ${data.diasRestantesSemana} dias`;
+
+  painelGestante.classList.add("aberto");  
+})
 
 // ÍCONE DO SINO
 const bellIcon = document.querySelector(".bell-icon");
