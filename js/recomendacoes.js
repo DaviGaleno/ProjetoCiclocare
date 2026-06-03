@@ -1,4 +1,6 @@
 ﻿const API_BASE_URL = "http://localhost:8080/api";
+const modoGestanteOn = localStorage.getItem("modoGestante") === "true";
+
 
 const fallbackRecommendations = [
   {
@@ -54,6 +56,33 @@ const fallbackRecommendations = [
     tempoLeitura: "3 min",
     icone: "fa-regular fa-moon",
     tags: ["descanso", "rotina"]
+  }
+];
+
+const fallbackGestanteRecommendations = [
+  {
+    titulo: "Mantenha o acompanhamento pré-natal",
+    descricao: "Consultas regulares ajudam a acompanhar a evolução da gestação e identificar cuidados necessários.",
+    categoria: "cuidados",
+    tempoLeitura: "3 min",
+    icone: "fa-solid fa-user-doctor",
+    tags: ["pré-natal", "acompanhamento"]
+  },
+  {
+    titulo: "Priorize hidratação ao longo do dia",
+    descricao: "A hidratação adequada é importante durante a gestação. Ajuste sua ingestão conforme orientação profissional.",
+    categoria: "alimentacao",
+    tempoLeitura: "2 min",
+    icone: "fa-solid fa-droplet",
+    tags: ["hidratação", "bem-estar"]
+  },
+  {
+    titulo: "Prefira movimentos leves e seguros",
+    descricao: "Caminhadas leves e alongamentos podem ajudar no bem-estar, desde que estejam liberados para você.",
+    categoria: "atividade",
+    tempoLeitura: "3 min",
+    icone: "fa-solid fa-person-walking",
+    tags: ["movimento", "gestação"]
   }
 ];
 
@@ -248,22 +277,86 @@ async function carregarResumoDashboard() {
   return data;
 }
 
+async function carregarRecomendacoesGestante() {
+  const token = localStorage.getItem("token");
+  const usuarioId = localStorage.getItem("usuarioId");
+
+  statusText.textContent = "Carregando recomendações da gestação";
+
+  const headers = {
+    Authorization: `Bearer ${token}`
+  };
+
+  const responseGestante = await fetch(
+    `${API_BASE_URL}/usuarios/${usuarioId}/modo-gestante`,
+    { headers }
+  );
+
+  if (!responseGestante.ok) {
+    throw new Error(`Modo gestante ${responseGestante.status}`);
+  }
+
+  const dadosGestante = await responseGestante.json();
+
+  faseAtual.textContent = dadosGestante.faseGestacional;
+
+  resumoCiclo.textContent =
+    `${dadosGestante.semanaAtual}ª semana de gestação. ${dadosGestante.mensagemFaseGestacao || ""}`;
+
+  const responseRecomendacoes = await fetch(
+    `${API_BASE_URL}/recomendacoes/gestante?id=${usuarioId}`,
+    { headers }
+  );
+
+  if (!responseRecomendacoes.ok) {
+    throw new Error(`Recomendações ${responseRecomendacoes.status}`);
+  }
+
+  const payloadRecomendacoes = await responseRecomendacoes.json();
+  const resultado = normalizarLista(payloadRecomendacoes);
+
+  recommendations =
+    resultado.lista.map(normalizarRecomendacao);
+
+  statusText.textContent =
+    `${recommendations.length} recomendações`;
+
+  renderizarRecomendacoes();
+
+}
+
 async function carregarRecomendacoes() {
   const token = localStorage.getItem("token");
   const usuarioId = localStorage.getItem("usuarioId");
 
   try {
+    if (modoGestanteOn) {
+      await carregarRecomendacoesGestante();
+      return;
+    }
+
     statusText.textContent = "Carregando do backend";
 
     const resumo = await carregarResumoDashboard();
+
     const params = new URLSearchParams();
 
-    if (usuarioId) params.set("usuarioId", usuarioId);
-    if (resumo && resumo.faseCiclo) params.set("faseCiclo", resumo.faseCiclo);
+    if (usuarioId) {
+      params.set("usuarioId", usuarioId);
+    }
 
-    const response = await fetch(`${API_BASE_URL}/recomendacoes?${params.toString()}`, {
-      headers: token ? { Authorization: `Bearer ${token}` } : {}
-    });
+    if (resumo && resumo.faseCiclo) {
+      params.set("faseCiclo", resumo.faseCiclo);
+    }
+
+    const response = await fetch(
+      `${API_BASE_URL}/recomendacoes?${params.toString()}`,
+      {
+        headers: token
+          ? { Authorization: `Bearer ${token}` }
+          : {}
+      }
+    );
 
     if (!response.ok) {
       throw new Error(`Recomendações ${response.status}`);
@@ -272,33 +365,51 @@ async function carregarRecomendacoes() {
     const payload = await response.json();
     const resultado = normalizarLista(payload);
 
-    recommendations = resultado.lista.map(normalizarRecomendacao);
+    recommendations =
+      resultado.lista.map(normalizarRecomendacao);
 
     if (resultado.faseCiclo) {
-      faseAtual.textContent = formatarFase(resultado.faseCiclo);
+      faseAtual.textContent =
+        formatarFase(resultado.faseCiclo);
     }
 
     if (resultado.mensagem) {
-      resumoCiclo.textContent = resultado.mensagem;
+      resumoCiclo.textContent =
+        resultado.mensagem;
     }
 
     if (!recommendations.length) {
-      recommendations = fallbackRecommendations.map(normalizarRecomendacao);
-      statusText.textContent = "Exibindo sugestões iniciais";
+      recommendations =
+        fallbackRecommendations.map(normalizarRecomendacao);
+
+      statusText.textContent =
+        "Exibindo sugestões iniciais";
     }
+
+    renderizarRecomendacoes();
+
   } catch (error) {
-    console.warn("Usando recomendações locais até o backend enviar dados:", error);
+    console.warn("Erro ao carregar recomendações:", error);
 
-    if (faseAtual.textContent === "Carregando...") {
+    recommendations = modoGestanteOn
+      ? fallbackGestanteRecommendations.map(normalizarRecomendacao)
+      : fallbackRecommendations.map(normalizarRecomendacao);
+
+    if (modoGestanteOn) {
+      faseAtual.textContent = "Gestação";
+      resumoCiclo.textContent =
+        "Não foi possível carregar recomendações personalizadas da gestação agora.";
+    } else {
       faseAtual.textContent = "Sugestões iniciais";
-      resumoCiclo.textContent = "A página já está pronta para receber recomendações personalizadas do backend.";
+      resumoCiclo.textContent =
+        "A página já está pronta para receber recomendações personalizadas do backend.";
     }
 
-    recommendations = fallbackRecommendations.map(normalizarRecomendacao);
-    statusText.textContent = "Exibindo sugestões iniciais";
-  }
+    statusText.textContent =
+      "Exibindo sugestões iniciais";
 
-  renderizarRecomendacoes();
+    renderizarRecomendacoes();
+  }
 }
 
 carregarUsuario();

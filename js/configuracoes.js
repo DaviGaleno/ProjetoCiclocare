@@ -8,6 +8,11 @@ const semanasCompletasGestante = document.getElementById("semanasCompletasGestan
 const diasGravidezGestante = document.getElementById("diasGravidezGestante");
 const tempoRestanteGestante = document.getElementById("tempoRestanteGestante");
 const painelGestante = document.getElementById("painelGestante");
+const modoGestanteOn = localStorage.getItem("modoGestante") === "true";
+const modalGestante = document.getElementById("modalGestante");
+const aceiteModoGestante = document.getElementById("aceiteModoGestante");
+const confirmarModoGestanteBtn = document.getElementById("confirmarModoGestante");
+const cancelarModoGestante = document.getElementById("cancelarModoGestante");
 const tituloNotificacoes = document.querySelector(".notificacoes-titulo");
 const listaNotificacoes = document.querySelector(".lista-notificacoes");
 const tituloPrivacidade = document.querySelector(".privacidade-titulo");
@@ -15,6 +20,14 @@ const listaPrivacidade = document.querySelector(".lista-privacidade");
 const tituloSeguranca = document.querySelector(".seguranca-titulo");
 const listaSeguranca = document.querySelector(".lista-seguranca");
 const onOffButtons = document.querySelectorAll(".on-off-button");
+const usuarioId = localStorage.getItem("usuarioId");
+const token = localStorage.getItem("token");
+
+modoGestanteToggle.checked = modoGestanteOn;
+
+if (modoGestanteOn) {
+  exibirDadosGestante();
+}
 
 onOffButtons.forEach((button) => {
   button.addEventListener("change", () => {
@@ -52,18 +65,7 @@ dropdownBtn.addEventListener("click", () => {
 
 // MODO GESTANTE
 
-modoGestanteToggle.addEventListener("change", async() => {
-  if (!modoGestanteToggle.checked) {
-    painelGestante.classList.remove("aberto");
-    localStorage.setItem("modoGestante", "false");
-    return;
-  }
-
-  localStorage.setItem("modoGestante", "true");
-
-  const usuarioId = localStorage.getItem("usuarioId");
-  const token = localStorage.getItem("token");
-
+async function exibirDadosGestante() {
   const response = await fetch(
     `http://localhost:8080/api/usuarios/${usuarioId}/modo-gestante`,
     {
@@ -73,6 +75,9 @@ modoGestanteToggle.addEventListener("change", async() => {
     }
   );
 
+  if (!response.ok) {
+    throw new Error("Erro ao carregar os dados da gestação.");
+  }
   const data = await response.json();
 
   textoSemanaGestante.textContent = data.mensagemPrincipal;
@@ -85,7 +90,38 @@ modoGestanteToggle.addEventListener("change", async() => {
     `${data.semanasRestantes} semanas e ${data.diasRestantesSemana} dias`;
 
   painelGestante.classList.add("aberto");  
-})
+}
+
+modoGestanteToggle.addEventListener("change", async() => {
+  if (!modoGestanteToggle.checked) {
+    localStorage.setItem("modoGestante", "false");
+    document.body.classList.remove("gestante-mode");
+    painelGestante.classList.remove("aberto");
+
+    return;
+  }
+
+  modoGestanteToggle.checked = false;
+  modalGestante.classList.add("aberto");
+});
+
+aceiteModoGestante.addEventListener("change", () => {
+  confirmarModoGestanteBtn.disabled = !aceiteModoGestante.checked;
+});
+
+confirmarModoGestanteBtn.addEventListener("click", async () => {
+  modalGestante.classList.remove("aberto");
+
+  aceiteModoGestante.checked = false;
+  confirmarModoGestanteBtn.disabled = true;
+
+  modoGestanteToggle.checked = true;
+  localStorage.setItem("modoGestante", "true");
+  document.body.classList.add("gestante-mode");
+
+  await exibirDadosGestante();
+});
+
 
 // ÍCONE DO SINO
 const bellIcon = document.querySelector(".bell-icon");
