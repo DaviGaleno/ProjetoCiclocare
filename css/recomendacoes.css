@@ -18,7 +18,9 @@
   --sombra:0 14px 34px rgba(143,83,83,0.11);
 }
 
-body{`r`n  min-height:100vh;`r`n  position:relative;
+body{  
+  min-height:100vh;
+  position:relative;
   overflow-x:hidden;
   background:linear-gradient(90deg,#f7ecec 0%,#f7ecec 50%,#efd3ef 100%);
   color:var(--texto);
@@ -513,5 +515,8 @@ width:min(100% - 24px, 1180px);
     grid-template-columns:1fr;
   }
 }
+
+
+
 
 

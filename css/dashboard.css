@@ -494,7 +494,7 @@ input:checked + .slider:before{
   display:grid;
   justify-content: center;
   grid-template-columns: 460px 760px;
-  gap: 72px;
+  gap: 120px;
 }
 
 .status-card,
@@ -851,7 +851,7 @@ input:checked + .slider:before{
 }
 
 .container-meta-agua strong {
-  font-size: 3rem;
+  font-size: 1.3rem;
   line-height: 1;
   color: #8F5353;
 }
@@ -1496,61 +1496,7 @@ input:checked + .slider:before{
   transform:translateX(28px);
 }
 
-/* MODO GESTANTE */
 
-.gestante-mode{
-
-  background:
-  linear-gradient(
-    135deg,
-    #fff0f4,
-    #fff7eb
-  );
-}
-
-.gestante-mode .navbar{
-
-  background:
-  linear-gradient(
-    90deg,
-    #ff9db7,
-    #ffc98b
-  );
-}
-
-.gestante-mode .status-card{
-
-  border-color:#ffb36b;
-}
-
-.gestante-mode .calendar-card,
-.gestante-mode .graph-card,
-.gestante-mode .alert-card,
-.gestante-mode .insight-card{
-
-  background:#fff8f2;
-}
-
-.gestante-mode .selectedMood,
-.gestante-mode .selectedEnergy{
-
-  background:
-  linear-gradient(
-    135deg,
-    #ffb36b,
-    #ff8fb1
-  );
-}
-
-.gestante-mode .day{
-
-  background:#ffd8e4;
-}
-
-.gestante-mode .selected{
-
-  background:#ff9db7;
-}
 .navbar-right{
 
   display:flex;

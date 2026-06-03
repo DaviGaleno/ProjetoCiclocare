@@ -17,6 +17,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
   <!-- CSS -->
   <link rel="stylesheet" href="./css/dashboard.css">
+  <link rel="stylesheet" href="./css/modo-gestante.css">
+  <!-- GESTANTE-->
+  <script src="./js/modo-gestante.js" defer></script>
   <!-- ÃCONES -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
   <!--Auth-->
@@ -191,7 +194,7 @@
         <h3 id="fase-ciclo"></h3>
         <strong id="dia-ciclo"></strong>
         <span id="mensagem-ciclo"></span>
-        <button>
+        <button id="editarMenstruacaoBtn">
           Editar Menstruação
         </button>
       </div>
@@ -260,6 +263,23 @@
             </div>
           </article>
         </div>
+        <div class="gestante-mini-cards">
+          <article>
+            <h3>Pré-natal</h3>
+            <p>Acompanhe consultas e exames recomendados.</p>
+            <button class="botao-rosa">Ver cuidados</button>
+          </article>
+
+          <article>
+            <h3>Tempo Restante</h3>
+            <p id="resumoSemanaGestacao">Carregando...</p>
+          </article>
+
+          <article>
+            <h3>Mês provável do parto</h3>
+            <p id="dataProvavelPartoCard">Carregando...</p>
+          </article>
+        </div>
       </section>
     </section>
 
@@ -322,17 +342,17 @@
             </div>
 
             <div class="container-meta-agua">
-              <strong>0</strong>
-              <span>/ 2,25 L</span>
+              <strong id="aguaConsumidaTexto">0</strong>
+              <span id="metaAguaTexto">/ 2,25 L</span>
             </div>
 
             <div class="botoes-lembrete-agua">
-              <button>
+              <button id="menosAgua">
                 <img src="./assets/icons/botao_menos.png" alt="">
 
               </button>
 
-              <button>
+              <button id="maisAgua">
                 <img src="./assets/icons/botao_mais.png" alt="">
 
               </button>

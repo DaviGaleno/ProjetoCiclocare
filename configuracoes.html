@@ -14,10 +14,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="./css/configuracoes.css">
+  <link rel="stylesheet" href="./css/modo-gestante.css">
+
+  <script src="./js/modo-gestante.js" defer></script>
 
   <!-- Ícones -->
   <link rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
 
 </head>
 
@@ -337,7 +341,47 @@
 
     </div>    
   </main>
+  <div class="modal-gestante" id="modalGestante">
+    <div class="modal-gestante-conteudo">
+      <h2>Ativar Modo Gestante?</h2>
 
+      <p>
+        Ao ativar o Modo Gestante, o CicloCare deixará de exibir:
+      </p>
+      <ul>
+         <li> previsões de ciclo menstrual</li>
+         <li> menstruação</li>
+         <li> ovulação</li> 
+         <li> janela fértil</li>
+         <li> alertas de anticoncepcional</li>
+         <li> recomendações baseadas em fase do ciclo menstrual</li>
+      </ul>
+
+        <p>As semanas são uma estimativa e podem diferir da idade gestacional verificada em consulta ou ultrassom.</p>
+        <p>O app não substitui acompanhamento pré-natal ou quaisquer outros cuidados médicos pertinentes à saúde da mãe ou do bebê.</p>
+        <p>Em caso de sintomas como sangramento, dor intensa, falta de ar, dor de cabeça forte, alterações na visão ou febre, procure atendimento médico.</p>
+        <p>Você pode desativar o Modo Gestante a qualquer momento nas Configurações.</p>      
+      
+
+      <p>
+        O CicloCare passará a usar a data do último ciclo para estimar o início do período gestacional.<br>
+      </p>
+
+      <label class="aceite-gestante">
+        <input type="checkbox" id="aceiteModoGestante">
+        Entendi.
+      </label>
+
+      <div class="acoes-modal-gestante">
+        <button id="cancelarModoGestante" class="botao-modal botao-cancelar">
+          Cancelar
+        </button>
+        <button id="confirmarModoGestante" class="botao-modal botao-confirmar" disabled>
+          Ativar Modo Gestante
+        </button>
+      </div>
+      </div>
+    </div>
   <!-- JS -->
   <script src="./js/configuracoes.js"></script>
 

@@ -1,0 +1,140 @@
+:root {
+  --pink-main: #FF7093;
+  --pink-soft: #ffc0cb;
+  --pink-light: #fff1f5;
+  --border: #F51C1C;
+  --rosa:#b26b6b;
+  --rosaClaro:#f7dede;
+  --rosaMedio:#f3c9d7;
+  --lilas:#eccff3;
+  --branco:#fff;
+  --text-main: #8b4d55;
+  --text-dark: #524C4E;
+  --card-bg: rgba(255, 246, 249, 0.82);
+  --shadow-soft: 0 12px 30px rgba(120, 60, 80, 0.16);
+  --inter-font: "Inter", sans-serif;
+}
+
+/* regras comuns de navbar/dropdown */
+
+body.gestante-mode .navbar {
+  background: linear-gradient(90deg, #ff9db7, #ffc98b);
+}
+
+body.gestante-mode .logo,
+body.gestante-mode .menu a,
+body.gestante-mode .dropdown-btn,
+body.gestante-mode .dropdown-btn i,
+body.gestante-mode .perfil a,
+body.gestante-mode .perfil i,
+body.gestante-mode .usuario span {
+  color: white;
+}
+
+body.gestante-mode .dropdown-content,
+body.gestante-mode .profile-dropdown {
+  background: #fff7f2;
+  border: 1px solid rgba(255, 157, 183, 0.35);
+}
+
+body.gestante-mode .dropdown-content a,
+body.gestante-mode .profile-dropdown a,
+body.gestante-mode .profile-dropdown a i {
+  color: #ff7093;
+}
+
+body.gestante-mode .dropdown-content a:hover,
+body.gestante-mode .profile-dropdown a:hover {
+  background: #fff1f5;
+  color: #e94f86;
+}
+
+body.gestante-mode .profile-dropdown a:hover i {
+  color: #e94f86;
+}
+
+body.gestante-mode .status-card{
+
+  border-color:#ffb36b;
+}
+
+body.gestante-mode .calendar-card,
+body.gestante-mode .graph-card,
+body.gestante-mode .alert-card,
+body.gestante-mode .insight-card{
+
+  background:#fff8f2;
+}
+
+body.gestante-mode .selectedMood,
+body.gestante-mode .selectedEnergy{
+
+  background:
+  linear-gradient(
+    135deg,
+    #ffb36b,
+    #ff8fb1
+  );
+}
+
+body.gestante-mode .day{
+
+  background:#ffd8e4;
+}
+
+body.gestante-mode .selected{
+
+  background:#ff9db7;
+}
+
+body.gestante-mode .day.birth-prediction-month {
+  background: linear-gradient(135deg, #ff2f7d, #ff9f1c);
+  color:white;
+  font-weight: 800;
+  border: 1px solid rgba(255, 112, 147, 0.35);
+  box-shadow: 0 8px 22px rgba(255, 47, 125, 0.45);
+}
+
+body.gestante-mode .day.birth-prediction-month.selected {
+  background: linear-gradient(135deg, #e6005c, #ff7a00);
+  color: white;
+  box-shadow:
+    0 0 0 3px rgba(255, 255, 255, 0.95),
+    0 10px 26px rgba(230, 0, 92, 0.5);
+}
+
+.gestante-mini-cards {
+  display: none;
+}
+
+body.gestante-mode .mini-cards {
+  display: none;
+}
+
+body.gestante-mode .gestante-mini-cards {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+}
+
+.gestante-mini-cards article {
+  background-color: white;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 20px;
+}
+
+.gestante-mini-cards article h3 {
+    color: var(--text-main);
+}
+
+body.gestante-mode #avisoPrecisaoCiclo {
+  display: none !important;
+}
+

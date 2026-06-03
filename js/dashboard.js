@@ -102,6 +102,41 @@ document.getElementById("nextMonth");
 
 let currentDate = new Date();
 
+const metaAguaPadrao = 2.25;
+const metaAguaGestante = 2.75;
+const passoAgua = 0.25;
+
+let aguaConsumida = 0;
+
+function obterMetaAgua() {
+  const modoGestanteAtivo =
+    localStorage.getItem("modoGestante") === "true";
+
+  return modoGestanteAtivo
+    ? metaAguaGestante
+    : metaAguaPadrao;
+}
+
+function atualizarCardAgua() {
+  const metaAgua = obterMetaAgua();
+
+  document.getElementById("aguaConsumidaTexto").textContent =
+    aguaConsumida.toFixed(2).replace(".", ",");
+
+  document.getElementById("metaAguaTexto").textContent =
+    `/ ${metaAgua.toFixed(2).replace(".", ",")} L`;
+}
+
+document.getElementById("maisAgua").addEventListener("click", () => { 
+  aguaConsumida += passoAgua;
+  atualizarCardAgua();
+});
+
+document.getElementById("menosAgua").addEventListener("click", () => {
+  aguaConsumida = Math.max(0, aguaConsumida - passoAgua);
+  atualizarCardAgua();
+})
+
 function renderCalendar(date) {
 
   calendarGrid.innerHTML = "";
@@ -155,8 +190,20 @@ function renderCalendar(date) {
     dayElement.classList.add("day", "current-month");
     dayElement.textContent = String(day).padStart(2, "0");
 
-    if (isMenstruationDay(dayDate)) {
-      dayElement.classList.add("menstruation-day");
+    const modoGestanteAtivo = localStorage.getItem("modoGestante") === "true";
+
+    if (modoGestanteAtivo) {
+      if (isBirthPredictionMonth(dayDate)) {
+        dayElement.classList.add("birth-prediction-month");
+      }
+
+      if (isBirthPredictionDay(dayDate)) {
+        dayElement.classList.add("birth-prediction-day");
+      }
+    } else {
+      if (isMenstruationDay(dayDate)) {
+        dayElement.classList.add("menstruation-day");
+      }
     }
 
     dayElement.addEventListener("click", () => {
@@ -194,7 +241,10 @@ if (prevMonth) {
       currentDate.getMonth() - 1
     );
     
-    await carregarCiclosCalendario(currentDate);
+    if (!modoGestanteAtivo) {
+      await carregarCiclosCalendario(currentDate);
+    }
+
     renderCalendar(currentDate);
 
   });
@@ -210,7 +260,10 @@ if (nextMonth) {
       currentDate.getMonth() + 1
     );
 
-    await carregarCiclosCalendario(currentDate);
+    if (!modoGestanteAtivo) {
+      await carregarCiclosCalendario(currentDate);
+    }
+    
     renderCalendar(currentDate);
 
   });
@@ -449,8 +502,103 @@ function atualizarAvisoPrecisao() {
   }
 }
 
+function formatarMesAno(dataISO) {
+  const data = parseLocalDate(dataISO);
+
+  const texto = data.toLocaleDateString("pt-BR", {
+    month: "long", 
+    year: "numeric"
+  });
+
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
+let dataProvavelParto = null; 
+
+async function exibirDashboardGestante() {
+  const usuarioId = localStorage.getItem("usuarioId");
+  const token = localStorage.getItem("token");
+  const avisoPrecisao = document.getElementById("avisoPrecisaoCiclo");
+  const editarMenstruacaoBtn = document.getElementById("editarMenstruacaoBtn");
+
+  const response = await fetch(
+    `http://localhost:8080/api/usuarios/${usuarioId}/modo-gestante`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );  
+
+  const data = await response.json();
+
+  if (avisoPrecisao) {
+    avisoPrecisao.hidden = true;
+    avisoPrecisao.textContent = "";
+  }
+
+  editarMenstruacaoBtn.hidden = true;
+
+  document.getElementById("fase-ciclo").innerText = "Gestação";
+
+  document.getElementById("faseAtualCiclo").textContent =
+  `Fase Gestacional: ${data.faseGestacional}`;
+
+  document.getElementById("mensagemFaseCiclo").textContent = 
+    data.mensagemFaseGestacao || "Acompanhe sua gestação com orientação profissional";
+
+  document.getElementById("dia-ciclo").innerText = `Dia ${data.diasGravidez}`;
+
+  document.getElementById("mensagem-ciclo").innerText = 
+    `${data.semanasCompletas} semanas e ${data.diasSemana} dias`;
+
+  document.getElementById("resumoSemanaGestacao").textContent = 
+    `Faltam ${data.semanasRestantes} semanas e ${data.diasRestantesSemana} dias`
+  
+  document.getElementById("dataProvavelPartoCard").textContent = 
+    formatarMesAno(data.previsaoParto);  
+
+  dataProvavelParto = data.previsaoParto;
+  renderCalendar(currentDate);
+}
+
 window.onload = async () => {
+  atualizarCardAgua();
+  
+  const modoGestanteAtivo = localStorage.getItem("modoGestante") === "true";
+
+  if (modoGestanteAtivo) {
+    await exibirDashboardGestante();
+    return;
+  }
   await exibirDashboard();
+}
+
+function isBirthPredictionDay(date) {
+  if (!dataProvavelParto) {
+    return false;
+  }
+
+  const parto = parseLocalDate(dataProvavelParto);
+
+  return (
+    date.getFullYear() === parto.getFullYear() &&
+    date.getMonth() === parto.getMonth() &&
+    date.getDate() === parto.getDate()
+  );
+}
+
+function isBirthPredictionMonth(date) {
+  if (!dataProvavelParto) {
+    return false;
+  }
+
+  const parto = parseLocalDate(dataProvavelParto);
+
+  return (
+    date.getFullYear() === parto.getFullYear() &&
+    date.getMonth() === parto.getMonth()
+  );
 }
 
 // ============================================================
